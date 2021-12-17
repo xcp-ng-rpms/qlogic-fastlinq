@@ -8,16 +8,23 @@
 %define module_dir updates
 %endif
 
+## kernel_version will be set during build because then kernel-devel
+## package installs an RPM macro which sets it. This check keeps
+## rpmlint happy.
+%if %undefined kernel_version
+%define kernel_version dummy
+%endif
+
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
-Version: 8.37.30.0
+Version: 8.42.10.0
 Release: %{tag}%{?dist}
 License: GPL
 
-Source0: https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.37.30.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.37.30.0#/qlogic-fastlinq-8.37.30.0.tar.gz
+Source0: https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.42.10.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.42.10.0#/qlogic-fastlinq-8.42.10.0.tar.gz
 
 
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.37.30.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.37.30.0#/qlogic-fastlinq-8.37.30.0.tar.gz) = 0c2f9e179bf3afec3900ab35beb040c8da167f79
+Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.42.10.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.42.10.0#/qlogic-fastlinq-8.42.10.0.tar.gz) = 4ba34fa51098fd6bb79db3fd2de484adc3654a7e
 
 
 BuildRequires: kernel-devel, git
@@ -69,6 +76,9 @@ install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroo
 /lib/modules/%{kernel_version}/*/*.ko
 
 %changelog
+* Mon May 17 2021 Chuntian Xu <chuntian.xu@citrix.com> - 8.42.10.0-3
+- CP-36870: Upgrade fastlinq driver to version 8.42.10.0
+
 * Fri Jan 25 2019 Deli Zhang <deli.zhang@citrix.com> - 8.37.30.0-3
 - CP-30073: Resolve issue of duplicate copy in target build_pre of makefile
 

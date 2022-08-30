@@ -1,8 +1,11 @@
+%global package_speccommit 775b48cd4e9671c83c46c626c5c3067fd7e94c67
+%global usver 8.42.10.0
+%global xsver 2
+%global xsrel %{xsver}%{?xscount}%{?xshash}
+%global package_srccommit 8.42.10.0
 %define vendor_name Qlogic
 %define vendor_label qlogic
 %define driver_name fastlinq
-
-%global tag 3
 
 %if %undefined module_dir
 %define module_dir updates
@@ -18,17 +21,13 @@
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
 Version: 8.42.10.0
-Release: %{tag}%{?dist}
+Release: %{?xsrel}%{?dist}
 License: GPL
-
-Source0: https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.42.10.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.42.10.0#/qlogic-fastlinq-8.42.10.0.tar.gz
-
-
-Provides: gitsha(https://code.citrite.net/rest/archive/latest/projects/XS/repos/driver-qlogic-fastlinq/archive?at=8.42.10.0-3&format=tgz&prefix=driver-qlogic-fastlinq-8.42.10.0#/qlogic-fastlinq-8.42.10.0.tar.gz) = 4ba34fa51098fd6bb79db3fd2de484adc3654a7e
-
+Source0: qlogic-fastlinq-8.42.10.0.tar.gz
 
 BuildRequires: gcc
-BuildRequires: kernel-devel, git
+BuildRequires: kernel-devel
+%{?_cov_buildrequires}
 Provides: vendor-driver
 Requires: kernel-uname-r = %{kernel_version}
 Requires(post): /usr/sbin/depmod
@@ -39,27 +38,30 @@ Requires(postun): /usr/sbin/depmod
 version %{kernel_version}.
 
 %prep
-%autosetup -p1 -S git -n driver-%{name}-%{version}
+%autosetup -p1 -n %{name}-%{version}
+%{?_cov_prepare}
 
 %build
-%{?cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  modules
-%{?cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src modules
-%{?cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src modules
-%{?cov_wrap} %{make_build} -C $(pwd)/qedf-%{version} KVER=%{kernel_version} build_pre
-%{?cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} modules
-%{?cov_wrap} %{make_build} -C $(pwd)/qedi-%{version} KVER=%{kernel_version} build_pre
-%{?cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src modules
+%{?_cov_wrap} %{make_build} -C $(pwd)/qedf-%{version} KVER=%{kernel_version} build_pre
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} modules
+%{?_cov_wrap} %{make_build} -C $(pwd)/qedi-%{version} KVER=%{kernel_version} build_pre
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} modules
 
 %install
-%{?cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
 # mark modules executable so that strip-to-file can strip them
 find %{buildroot}/lib/modules/%{kernel_version} -name "*.ko" -type f | xargs chmod u+x
 mkdir -p %{buildroot}/lib/firmware/qed
 install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroot}/lib/firmware/qed
+
+%{?_cov_install}
 
 %post
 /sbin/depmod %{kernel_version}
@@ -76,9 +78,17 @@ install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroo
 /lib/firmware
 /lib/modules/%{kernel_version}/*/*.ko
 
+%{?_cov_results_package}
+
 %changelog
-* Mon May 17 2021 Chuntian Xu <chuntian.xu@citrix.com> - 8.42.10.0-3
-- CP-36870: Upgrade fastlinq driver to version 8.42.10.0
+* Mon Feb 14 2022 Ross Lagerwall <ross.lagerwall@citrix.com> - 8.42.10.0-2
+- CP-38416: Enable static analysis
+
+* Wed Jan 19 2022 Deli Zhang <deli.zhang@citrix.com> - 8.42.10.0-1
+- CP-37631: Upgrade fastlinq driver to version 8.42.10.0
+
+* Wed Dec 02 2020 Ross Lagerwall <ross.lagerwall@citrix.com> - 8.37.30.0-4
+- CP-35517: Fix the build for koji
 
 * Fri Jan 25 2019 Deli Zhang <deli.zhang@citrix.com> - 8.37.30.0-3
 - CP-30073: Resolve issue of duplicate copy in target build_pre of makefile
@@ -97,4 +107,3 @@ install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroo
 
 * Wed Sep 20 2017 Simon Rowe <simon.rowe@citrix.com> - 8.20.4.0-1
 - UPD-119: (QL-644) updating fastlinq version to 8.20.4.0
-

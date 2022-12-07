@@ -1,8 +1,8 @@
-%global package_speccommit 775b48cd4e9671c83c46c626c5c3067fd7e94c67
-%global usver 8.42.10.0
-%global xsver 2
+%global package_speccommit 1482123a7c3a283d5fdaccaa659f61d889498b94
+%global usver 8.55.13.0
+%global xsver 1
 %global xsrel %{xsver}%{?xscount}%{?xshash}
-%global package_srccommit 8.42.10.0
+%global package_srccommit 8.55.13.0
 %define vendor_name Qlogic
 %define vendor_label qlogic
 %define driver_name fastlinq
@@ -20,10 +20,10 @@
 
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
-Version: 8.42.10.0
+Version: 8.55.13.0
 Release: %{?xsrel}%{?dist}
 License: GPL
-Source0: qlogic-fastlinq-8.42.10.0.tar.gz
+Source0: qlogic-fastlinq-8.55.13.0.tar.gz
 
 BuildRequires: kernel-devel
 %{?_cov_buildrequires}
@@ -80,6 +80,9 @@ install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroo
 %{?_cov_results_package}
 
 %changelog
+* Tue Sep 20 2022 Zhuangxuan Fei <zhuangxuan.fei@citrix.com> - 8.55.13.0-1
+- CP-40164: Upgrade fastlinq driver to version 8.55.13.0
+
 * Mon Feb 14 2022 Ross Lagerwall <ross.lagerwall@citrix.com> - 8.42.10.0-2
 - CP-38416: Enable static analysis
 

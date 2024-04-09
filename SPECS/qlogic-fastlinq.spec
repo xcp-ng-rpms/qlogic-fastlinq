@@ -1,11 +1,17 @@
-%global package_speccommit 1482123a7c3a283d5fdaccaa659f61d889498b94
-%global usver 8.55.13.0
+%global package_speccommit f76d0cf2ab6b9f9cac2b2187f29c1db8e30d203c
+%global usver 8.74.0.2
 %global xsver 1
 %global xsrel %{xsver}%{?xscount}%{?xshash}
-%global package_srccommit 8.55.13.0
+%global package_srccommit 8.74.0.2
 %define vendor_name Qlogic
 %define vendor_label qlogic
 %define driver_name fastlinq
+## Components in the package have different versions
+%define qed_version 8.74.0.0
+%define qede_version 8.74.0.0
+%define qedr_version 8.74.0.0
+%define qedi_version 8.74.0.0
+%define qedf_version 8.74.0.2
 
 %if %undefined module_dir
 %define module_dir updates
@@ -20,10 +26,10 @@
 
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
-Version: 8.55.13.0
+Version: 8.74.0.2
 Release: %{?xsrel}%{?dist}
 License: GPL
-Source0: qlogic-fastlinq-8.55.13.0.tar.gz
+Source0: qlogic-fastlinq-8.74.0.2.tar.gz
 
 BuildRequires: gcc
 BuildRequires: kernel-devel
@@ -42,24 +48,24 @@ version %{kernel_version}.
 %{?_cov_prepare}
 
 %build
-%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  modules
-%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src modules
-%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{qed_version}/src  modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{qede_version}/src modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{qedr_version}/src modules
 %{?_cov_wrap} %{make_build} -C $(pwd)/qedf-%{version} KVER=%{kernel_version} build_pre
-%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} modules
-%{?_cov_wrap} %{make_build} -C $(pwd)/qedi-%{version} KVER=%{kernel_version} build_pre
-%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} modules
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{qedf_version} modules
+%{?_cov_wrap} %{make_build} -C $(pwd)/qedi-%{qedi_version} KVER=%{kernel_version} build_pre
+%{?_cov_wrap} %{make_build} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{qedi_version} modules
 
 %install
-%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{version}/src  INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
-%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qed-%{qed_version}/src  INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qede-%{qede_version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedr-%{qedr_version}/src INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedf-%{qedf_version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
+%{?_cov_wrap} %{__make} %{?_smp_mflags} -C /lib/modules/%{kernel_version}/build KVER=%{kernel_version} M=$(pwd)/qedi-%{qedi_version} INSTALL_MOD_PATH=%{buildroot} INSTALL_MOD_DIR=%{module_dir} DEPMOD=/bin/true modules_install
 # mark modules executable so that strip-to-file can strip them
 find %{buildroot}/lib/modules/%{kernel_version} -name "*.ko" -type f | xargs chmod u+x
 mkdir -p %{buildroot}/lib/firmware/qed
-install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroot}/lib/firmware/qed
+install -m 755 $(pwd)/qed-%{qed_version}/src/qed_init_values_zipped-*.bin %{buildroot}/lib/firmware/qed
 
 %{?_cov_install}
 
@@ -81,6 +87,9 @@ install -m 755 $(pwd)/qed-%{version}/src/qed_init_values_zipped-*.bin %{buildroo
 %{?_cov_results_package}
 
 %changelog
+* Tue Jan 23 2024 Stephen Cheng <stephen.cheng@cloud.com> - 8.74.0.2-1
+- CP-47038: Upgrade fastlinq driver to version 8.74.0.2
+
 * Tue Sep 20 2022 Zhuangxuan Fei <zhuangxuan.fei@citrix.com> - 8.55.13.0-1
 - CP-40164: Upgrade fastlinq driver to version 8.55.13.0
 

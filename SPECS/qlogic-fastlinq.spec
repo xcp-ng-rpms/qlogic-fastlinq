@@ -27,7 +27,10 @@
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
 Version: 8.74.0.2
-Release: %{?xsrel}%{?dist}
+Release: %{?xsrel}.1%{?dist}
+# Built against new kABI after cip rebase
+Requires: xcpng-kernel-kabi = 4.19.325-cip134+
+
 License: GPL
 Source0: qlogic-fastlinq-8.74.0.2.tar.gz
 
@@ -87,6 +90,9 @@ install -m 755 $(pwd)/qed-%{qed_version}/src/qed_init_values_zipped-*.bin %{buil
 %{?_cov_results_package}
 
 %changelog
+* Mon Aug 31 2026 Quentin Casasnovas <quentin.casasnovas@vates.tech> - 8.74.0.2-1.1
+- Rebuild for kernel v4.19.325-cip134
+
 * Tue Jan 23 2024 Stephen Cheng <stephen.cheng@cloud.com> - 8.74.0.2-1
 - CP-47038: Upgrade fastlinq driver to version 8.74.0.2
 

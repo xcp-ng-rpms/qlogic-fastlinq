@@ -27,12 +27,12 @@
 Summary: %{vendor_name} %{driver_name} device drivers
 Name: %{vendor_label}-%{driver_name}
 Version: 8.74.0.2
-Release: %{?xsrel}%{?dist}
+Release: %{?xsrel}.0.kernelpreview.1%{?dist}
 License: GPL
 Source0: qlogic-fastlinq-8.74.0.2.tar.gz
 
 BuildRequires: gcc
-BuildRequires: kernel-devel
+BuildRequires: kernel-devel >= 4.19.325-cip137.8.0.46.16
 %{?_cov_buildrequires}
 Provides: vendor-driver
 Requires: kernel-uname-r = %{kernel_version}
@@ -87,6 +87,9 @@ install -m 755 $(pwd)/qed-%{qed_version}/src/qed_init_values_zipped-*.bin %{buil
 %{?_cov_results_package}
 
 %changelog
+* Mon Nov 16 2026 Quentin Casasnovas <quentin.casasnovas@vates.tech> - 8.74.0.2-1.0.kernelpreview.1
+- Rebuild for kernel v4.19.325-cip137
+
 * Tue Jan 23 2024 Stephen Cheng <stephen.cheng@cloud.com> - 8.74.0.2-1
 - CP-47038: Upgrade fastlinq driver to version 8.74.0.2
 
